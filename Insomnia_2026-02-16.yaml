@@ -1,0 +1,303 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: api-exploring-auth
+meta:
+  id: wrk_9ee4a327da8840b39e1ed03ba9417538
+  created: 1771012537602
+  modified: 1771245558486
+  description: ""
+collection:
+  - url: "{{ _.base_url }}/auth"
+    name: access_token
+    meta:
+      id: req_ac96b9539f8149e3a46b2042f0cf7f34
+      created: 1770898625747
+      modified: 1770983475866
+      isPrivate: false
+      description: ""
+      sortKey: -1770898625747
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "username" : "{{ _.username_admin }}",
+            "password" : "{{ _.password_admin }}"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/booking"
+    name: create-new-booking
+    meta:
+      id: req_4e4f40f01a644feeb925a5662f4cbba0
+      created: 1770902562372
+      modified: 1770984040358
+      isPrivate: false
+      description: ""
+      sortKey: -1770898625647
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"firstname": "{% faker 'randomFirstName' %}",
+        	"lastname": "{% faker 'randomLastName' %}",
+        	"totalprice" : 111,
+        	"depositpaid" : true,
+        	"bookingdates" : {
+        			"checkin" : "2018-01-01",
+        			"checkout" : "2019-01-01"
+        	},
+        	"additionalneeds" : "Breakfast"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/booking/"
+    name: get-by-parameters
+    meta:
+      id: req_5770cb8a12f5453ead6da5e814d35a3a
+      created: 1770906462561
+      modified: 1770984187625
+      isPrivate: false
+      description: ""
+      sortKey: -1770898625547
+    method: GET
+    parameters:
+      - name: firstname
+        value: "{% response 'body', 'req_4e4f40f01a644feeb925a5662f4cbba0',
+          'b64::JC5ib29raW5nLmZpcnN0bmFtZQ==::46b', 'when-expired', 60 %}"
+        description: ""
+        disabled: false
+      - name: lastname
+        value: "{% response 'body', 'req_4e4f40f01a644feeb925a5662f4cbba0',
+          'b64::JC5ib29raW5nLmxhc3RuYW1l::46b', 'never', 60 %}"
+        description: ""
+        disabled: false
+      - name: bookingdates.checkin
+        value: "{% response 'body', 'req_4e4f40f01a644feeb925a5662f4cbba0',
+          'b64::JC5ib29raW5nLmJvb2tpbmdkYXRlcy5jaGVja2lu::46b', 'never', 60 %}"
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+      - name: Content-Type
+        value: application/json
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/booking/{% response 'body',
+      'req_4e4f40f01a644feeb925a5662f4cbba0', 'b64::JC5ib29raW5naWQ=::46b',
+      'never', 60 %}"
+    name: get-by-id
+    meta:
+      id: req_f6958133c4934bc29798cc6964d028e1
+      created: 1770907769544
+      modified: 1770984236576
+      isPrivate: false
+      description: ""
+      sortKey: -1770898625447
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+      - name: Content-Type
+        value: application/json
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/booking/{% response 'body',
+      'req_4e4f40f01a644feeb925a5662f4cbba0', 'b64::JC5ib29raW5naWQ=::46b',
+      'never', 60 %}"
+    name: update-booking
+    meta:
+      id: req_c74cd9665eea471a8a2e93ffc728a998
+      created: 1770915085983
+      modified: 1770984278658
+      isPrivate: false
+      description: ""
+      sortKey: -1770898625347
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "firstname" : "James",
+            "lastname" : "UPDATED",
+            "totalprice" : 555,
+            "depositpaid" : true,
+            "bookingdates" : {
+                "checkin" : "2018-01-01",
+                "checkout" : "2019-01-01"
+            },
+            "additionalneeds" : "Breakfast"
+        }
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+      - name: Content-Type
+        value: application/json
+      - name: Cookie
+        value: token={% response 'body', 'req_ac96b9539f8149e3a46b2042f0cf7f34',
+          'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}
+        description: ""
+        disabled: false
+      - name: Authorization
+        value: YWRtaW46cGFzc3dvcmQxMjM=]
+        description: ""
+        disabled: true
+      - name: Accept
+        value: application/json
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: ""
+      password: ""
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/booking/{% response 'body',
+      'req_4e4f40f01a644feeb925a5662f4cbba0', 'b64::JC5ib29raW5naWQ=::46b',
+      'never', 60 %}"
+    name: delete-booking
+    meta:
+      id: req_85e8fd29b09c4f0c8aff02e6ccc5f628
+      created: 1770921814079
+      modified: 1770923070737
+      isPrivate: false
+      description: ""
+      sortKey: -1770898625247
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+      - name: Content-Type
+        value: application/json
+        description: ""
+        disabled: false
+      - name: Accept
+        value: application/json
+        description: ""
+        disabled: false
+      - name: Cookie
+        value: token={% response 'body', 'req_ac96b9539f8149e3a46b2042f0cf7f34',
+          'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}
+        description: ""
+        disabled: false
+      - name: Authorization
+        value: YWRtaW46cGFzc3dvcmQxMjM=]
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/ping"
+    name: ping-healthcheck
+    meta:
+      id: req_32c1f73d44604d118a19e8dfa7d068f2
+      created: 1770923186375
+      modified: 1771012560589
+      isPrivate: false
+      description: ""
+      sortKey: -1770923186375
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.1
+        description: ""
+        disabled: false
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status deve ser 201 no /ping', async () => {
+          insomnia.expect(insomnia.response.code).to.equal(201);
+        });
+        	
+        insomnia.test('Corpo deve retornar Created', async () => {
+          insomnia.expect(insomnia.response.body).to.equal('Created');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_a2009475dc2d4958a368935b2a9294f9
+    created: 1770898625733
+    modified: 1771245583696
+environments:
+  name: Base Environment
+  meta:
+    id: env_9dd72a0304eb4819851615283cab2846
+    created: 1770898625727
+    modified: 1771245583768
+    isPrivate: false
+  data:
+    base_url: https://restful-booker.herokuapp.com
+    username_admin: admin
+    password_admin: password123
