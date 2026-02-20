@@ -1,0 +1,647 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: api-exploring-auth
+meta:
+  id: wrk_9ee4a327da8840b39e1ed03ba9417538
+  created: 1771012537602
+  modified: 1771245558486
+  description: ""
+collection:
+  - name: AUTH
+    meta:
+      id: fld_7e3d594c56884a5497b1159b3a5f027e
+      created: 1771592781548
+      modified: 1771596684677
+      sortKey: -1771592789822
+      description: ""
+    children:
+      - name: POSITIVE
+        meta:
+          id: fld_a7b3dc6db3ae4cbaa7d5b3b37a018dd5
+          created: 1771592914762
+          modified: 1771596684677
+          sortKey: -1771592914962
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/auth"
+            name: create-access-token
+            meta:
+              id: req_ac96b9539f8149e3a46b2042f0cf7f34
+              created: 1770898625747
+              modified: 1771592958218
+              isPrivate: false
+              description: ""
+              sortKey: -1771592944215
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                    "username" : "{{ _.username_admin }}",
+                    "password" : "{{ _.password_admin }}"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >-
+                insomnia.test('The status code should be 200 when
+                authenticating.', async () =>{
+                	insomnia.expect(insomnia.response.code).to.equal(200);
+                });
+
+
+                insomnia.test('The response should be contain the token.', async
+                () =>{
+                	const json = JSON.parse(insomnia.response.body);
+                	insomnia.expect(json).to.have.property('token');
+                	insomnia.expect(json.token).to.be.a('string').that.has.length.greaterThan(8);
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: NEGATIVE
+        meta:
+          id: fld_0761ca603f4c4ec59a0c8d90a15f2d6a
+          created: 1771592924319
+          modified: 1771596590704
+          sortKey: -1771592914862
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/auth"
+            name: without-password-access-token
+            meta:
+              id: req_c3edb00a19174c05814cbc5f28a9b838
+              created: 1771595424213
+              modified: 1771596093329
+              isPrivate: false
+              description: ""
+              sortKey: -1771595387512
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                    "username" : "{{ _.username_admin }}"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >
+                insomnia.test('Fail auth when dont have password', () => {
+                  insomnia.expect(insomnia.response.code).to.be.oneOf([400, 200]);
+
+                	if (insomnia.response.code === 200) {
+                		const body = JSON.parse(insomnia.response.body);
+                  	insomnia.expect(body.reason).to.equal('Bad credentials');
+                		}
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.base_url }}/auth"
+            name: invalid-credentials-access-token
+            meta:
+              id: req_fba7ad143e9d46b5a4785959e5b04118
+              created: 1771595593292
+              modified: 1771595925671
+              isPrivate: false
+              description: ""
+              sortKey: -1771595296974.5
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                    "username" : "{{ _.username_admin }}",
+                    "password" : "12345"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: |
+                insomnia.test('Fail auth with invalid credentials', () => {
+                  insomnia.expect(insomnia.response.code).to.equal(200);
+
+                  const body = JSON.parse(insomnia.response.body);
+                  insomnia.expect(body.reason).to.equal('Bad credentials');
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+  - name: BOOKING
+    meta:
+      id: fld_fb6da830edb847bd9618df46fbcfbaae
+      created: 1771592789722
+      modified: 1771596687556
+      sortKey: -1771592789722
+      description: ""
+    children:
+      - name: DELETE
+        meta:
+          id: fld_688ecd88737744bc911c3010e14114e5
+          created: 1771593038511
+          modified: 1771596687557
+          sortKey: -1771593012787
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/booking/{% response 'body',
+              'req_4e4f40f01a644feeb925a5662f4cbba0',
+              'b64::JC5ib29raW5naWQ=::46b', 'never', 60 %}"
+            name: delete-booking
+            meta:
+              id: req_85e8fd29b09c4f0c8aff02e6ccc5f628
+              created: 1770921814079
+              modified: 1771596233560
+              isPrivate: false
+              description: ""
+              sortKey: -1771593643344
+            method: DELETE
+            headers:
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+              - name: Content-Type
+                value: application/json
+                description: ""
+                disabled: false
+              - name: Accept
+                value: application/json
+                description: ""
+                disabled: false
+              - name: Cookie
+                value: token={% response 'body', 'req_ac96b9539f8149e3a46b2042f0cf7f34',
+                  'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}
+                description: ""
+                disabled: false
+              - name: Authorization
+                value: YWRtaW46cGFzc3dvcmQxMjM=]
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >-
+                insomnia.test('The status code should be 200/201', async () => {
+                	insomnia.expect([202, 201]).to.include(insomnia.response.code)
+                });
+
+
+                insomnia.test('The status should be return "Created"', async ()
+                => {
+                	insomnia.expect(insomnia.response.body).to.equal('Created')
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: PARTIAL-UPDATE
+        meta:
+          id: fld_439f4acce01f428881dc28841d3a57a8
+          created: 1771593050370
+          modified: 1771596687150
+          sortKey: -1771593012987
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/booking/{% response 'body',
+              'req_4e4f40f01a644feeb925a5662f4cbba0',
+              'b64::JC5ib29raW5naWQ=::46b', 'never', 60 %}"
+            name: partial-update-booking
+            meta:
+              id: req_883d759eef904903be43f7dcf909248f
+              created: 1771593655154
+              modified: 1771595168462
+              isPrivate: false
+              description: ""
+              sortKey: -1771593655154
+            method: PATCH
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"firstname": "James",
+                	"lastname": "Partial Brown",
+                	"totalprice": 555
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+              - name: Cookie
+                value: token={% response 'body', 'req_ac96b9539f8149e3a46b2042f0cf7f34',
+                  'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >
+                
+                insomnia.test('The status code should be 200', async () => {
+                  insomnia.expect(insomnia.response.code).to.equal(200);
+                });
+
+
+                insomnia.test('The fields should be partial updated', async ()
+                => {
+                  const json = JSON.parse(insomnia.response.body);
+                  insomnia.expect(json).to.have.property('firstname');
+                  insomnia.expect(json).to.have.property('lastname');
+                	insomnia.expect(json.firstname).to.equal('James');
+                	insomnia.expect(json.lastname).to.equal('Partial Brown');
+                	insomnia.expect(json.totalprice).to.equal(555);
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: UPDATE
+        meta:
+          id: fld_0ad5b2698fde43f1a3229f28dcc54d92
+          created: 1771593055088
+          modified: 1771596686642
+          sortKey: -1771593013187
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/booking/{% response 'body',
+              'req_4e4f40f01a644feeb925a5662f4cbba0',
+              'b64::JC5ib29raW5naWQ=::46b', 'never', 60 %}"
+            name: update-booking
+            meta:
+              id: req_c74cd9665eea471a8a2e93ffc728a998
+              created: 1770915085983
+              modified: 1771593649191
+              isPrivate: false
+              description: ""
+              sortKey: -1771593649156
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"firstname": "Anneh",
+                	"lastname": "Lore",
+                	"totalprice": 333,
+                	"depositpaid": true,
+                	"bookingdates": {
+                		"checkin": "2026-03-17",
+                		"checkout": "2026-04-07"
+                	},
+                	"additionalneeds": "Breakfast and Towels"
+                }
+            headers:
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+              - name: Content-Type
+                value: application/json
+              - name: Cookie
+                value: token={% response 'body', 'req_ac96b9539f8149e3a46b2042f0cf7f34',
+                  'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}
+                description: ""
+                disabled: false
+              - name: Authorization
+                value: YWRtaW46cGFzc3dvcmQxMjM=]
+                description: ""
+                disabled: true
+              - name: Accept
+                value: application/json
+                description: ""
+                disabled: false
+            authentication:
+              type: basic
+              useISO88591: false
+              username: ""
+              password: ""
+              disabled: false
+            scripts:
+              afterResponse: >+
+                insomnia.test('The status code should be 200', async () => {
+                	insomnia.expect(insomnia.response.code).to.equal(200);
+                });
+
+
+                insomnia.test('The response should be contain all fields', async
+                () => {
+                	const json = JSON.parse(insomnia.response.body);
+                	insomnia.expect(json).to.have.all.keys('firstname', 'lastname', 'totalprice', 'depositpaid', 'bookingdates', 'additionalneeds');
+                });
+
+
+                insomnia.test('The fields should be updated', async () => {
+                	const json = JSON.parse(insomnia.response.body);
+                	insomnia.expect(json.firstname).to.equal('Anneh');
+                	insomnia.expect(json.lastname).to.equal('Lore');
+                	insomnia.expect(json.totalprice).to.equal(333);
+                	insomnia.expect(json.depositpaid).to.equal(true);
+                	insomnia.expect(json.bookingdates.checkin).to.equal('2026-03-17');
+                	insomnia.expect(json.bookingdates.checkout).to.equal('2026-04-07');
+                	insomnia.expect(json.additionalneeds).to.equal('Breakfast and Towels');
+                });
+
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: GET-PARAMS
+        meta:
+          id: fld_df4c1caba9b744ac9865970a2b91a7e1
+          created: 1771593063037
+          modified: 1771596686143
+          sortKey: -1771593013312
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/booking/"
+            name: get-by-parameters
+            meta:
+              id: req_5770cb8a12f5453ead6da5e814d35a3a
+              created: 1770906462561
+              modified: 1771593749479
+              isPrivate: false
+              description: ""
+              sortKey: -1771593749434
+            method: GET
+            parameters:
+              - name: firstname
+                value: "{{ _.first_name }}"
+                description: ""
+                disabled: false
+              - name: lastname
+                value: "{{ _.last_name }}"
+                description: ""
+                disabled: false
+              - name: booking_date_checkin
+                value: "{{ _.booking_date_checkin }}"
+                description: ""
+                disabled: false
+            headers:
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+              - name: Content-Type
+                value: application/json
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >+
+                insomnia.test('The status code should be 200', async () => {
+                  insomnia.expect(insomnia.response.code).to.equal(200);
+                });
+
+
+                insomnia.test('The response is a list of objects with a numeric
+                bookingid', async () =>{
+                	const arr = JSON.parse(insomnia.response.body);
+                	insomnia.expect(arr).to.be.an('array');
+                	
+                	if (arr.length > 0) {
+                		insomnia.expect(arr[0]).to.have.property('bookingid');
+                		insomnia.expect(arr[0].bookingid).to.be.a('number');
+                	}	else{
+                		insomnia.expect(arr.length).to.equal(0);
+                	}
+                });
+
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: GET-ID
+        meta:
+          id: fld_cd2c13ce217c4c19a0a1ff10239a5e0b
+          created: 1771593070132
+          modified: 1771596685675
+          sortKey: -1771593013337
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/booking/{% response 'body',
+              'req_4e4f40f01a644feeb925a5662f4cbba0',
+              'b64::JC5ib29raW5naWQ=::46b', 'when-expired', 120 %}"
+            name: get-by-id
+            meta:
+              id: req_f6958133c4934bc29798cc6964d028e1
+              created: 1770907769544
+              modified: 1771593744073
+              isPrivate: false
+              description: ""
+              sortKey: -1771593744023
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+              - name: Content-Type
+                value: application/json
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >
+                
+                insomnia.test('Status 200 ao consultar por ID', async () => {
+                  insomnia.expect(insomnia.response.code).to.equal(200);
+                });
+
+
+
+                insomnia.test('Booking payload should be has expected keys',
+                async () => {
+                	const json = JSON.parse(insomnia.response.body);
+                	
+                  insomnia.expect(json).to.have.all.keys(
+                		'firstname', 'lastname', 'totalprice', 'depositpaid', 'bookingdates', 'additionalneeds'
+                	);
+                  insomnia.expect(json.bookingdates).to.have.all.keys('checkin', 'checkout');
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: CREATE
+        meta:
+          id: fld_99a582c003194769a93760d5418e1d3d
+          created: 1771593076166
+          modified: 1771596685170
+          sortKey: -1771593013387
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/booking"
+            name: create-new-booking
+            meta:
+              id: req_4e4f40f01a644feeb925a5662f4cbba0
+              created: 1770902562372
+              modified: 1771594083937
+              isPrivate: false
+              description: ""
+              sortKey: -1771594083904
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"firstname": "{{ _.first_name }}",
+                	"lastname": "{{ _.last_name }}",
+                	"totalprice" : 111,
+                	"depositpaid" : true,
+                	"bookingdates" : {
+                			"checkin" : "{{ _.booking_date_checkin }}",
+                			"checkout" : "{{ _.booking_date_checkout }}"
+                	},
+                	"additionalneeds" : "Breakfast"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            scripts:
+              afterResponse: >-
+                insomnia.test('The status code should be 200/201', async () =>{
+                	insomnia.expect([200,201]).to.include(insomnia.response.code);
+                });
+
+
+                insomnia.test('Response should be contain bookingid numeric and
+                booking object', async () =>{
+                	const json = JSON.parse(insomnia.response.body);
+                	insomnia.expect(json).to.have.property('booking');
+                	insomnia.expect(json.bookingid).to.be.an('number');
+                	insomnia.expect(json).to.have.property('booking');
+                	
+                	const booking_info = json.booking;
+                	insomnia.expect(booking_info).to.include.all.keys( 
+                		'firstname', 'lastname', 'totalprice', 'depositpaid', 'bookingdates', 								'additionalneeds');
+                	insomnia.expect(booking_info.bookingdates).to.include.all.keys(
+                		'checkin','checkout');
+                });
+
+
+                insomnia.test('Fixed payload values should be correct', async ()
+                =>{
+                	const {booking} = JSON.parse(insomnia.response.body);
+                	insomnia.expect(booking.totalprice).to.equal(111);
+                  insomnia.expect(booking.depositpaid).to.equal(true);
+                  insomnia.expect(booking.additionalneeds).to.equal('Breakfast');
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+  - name: HEALTHCHECK
+    meta:
+      id: fld_a9e7c54793ea4e758534afe658d3785f
+      created: 1771592819019
+      modified: 1771596687945
+      sortKey: -1771245707434.5
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/ping"
+        name: ping-healthcheck
+        meta:
+          id: req_32c1f73d44604d118a19e8dfa7d068f2
+          created: 1770923186375
+          modified: 1771596192934
+          isPrivate: false
+          description: ""
+          sortKey: -1771592882455
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: |-
+            insomnia.test('Status deve ser 201 no /ping', async () => {
+              insomnia.expect(insomnia.response.code).to.equal(201);
+            });
+            	
+            insomnia.test('Corpo deve retornar Created', async () => {
+              insomnia.expect(insomnia.response.body).to.equal('Created');
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_a2009475dc2d4958a368935b2a9294f9
+    created: 1770898625733
+    modified: 1771596687918
+environments:
+  name: Base Environment
+  meta:
+    id: env_9dd72a0304eb4819851615283cab2846
+    created: 1770898625727
+    modified: 1771596687927
+    isPrivate: false
+  data:
+    base_url: https://restful-booker.herokuapp.com
+    username_admin: admin
+    password_admin: password123
+    first_name: Johnn
+    last_name: Dustin
+    booking_date_checkin: 2026-03-17
+    booking_date_checkout: 2026-04-07
